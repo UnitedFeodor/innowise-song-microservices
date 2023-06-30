@@ -2,14 +2,23 @@ version: "3.8"
 services:
   file:
     build: ./file-api
-
-  localstack:
-    image: localstack/localstack
+  mysql:
+    image: mysql:8.0
     ports:
-      - "4572:4572"
+      - 3307:3306
     environment:
-      - SERVICES=s3
-      - DOCKER_HOST=unix:///var/run/docker.sock
+      - MYSQL_ROOT_PASSWORD=BebraBebra
+      - MYSQL_DATABASE=innowise-microservices-file-api
     volumes:
-      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - /var/lib/mysql
+
+#  localstack:
+#    image: localstack/localstack
+#    ports:
+#      - "4572:4572"
+#    environment:
+#      - SERVICES=s3
+#      - DOCKER_HOST=unix:///var/run/docker.sock
+#    volumes:
+#      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+#      - "/var/run/docker.sock:/var/run/docker.sock"
