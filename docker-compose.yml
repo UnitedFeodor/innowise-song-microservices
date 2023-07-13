@@ -2,6 +2,8 @@ version: "3.8"
 services:
   file:
     build: ./file-api
+    depends_on:
+      - mysql
   mysql:
     image: mysql:8.0
     ports:
@@ -12,13 +14,13 @@ services:
     volumes:
       - /var/lib/mysql
 
-#  localstack:
-#    image: localstack/localstack
-#    ports:
-#      - "4572:4572"
-#    environment:
-#      - SERVICES=s3
-#      - DOCKER_HOST=unix:///var/run/docker.sock
-#    volumes:
-#      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
-#      - "/var/run/docker.sock:/var/run/docker.sock"
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"

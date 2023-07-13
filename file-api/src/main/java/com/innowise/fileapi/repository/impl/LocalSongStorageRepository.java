@@ -11,7 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -31,7 +33,14 @@ public class LocalSongStorageRepository implements SongStorageRepository {
                     .getBytes(StandardCharsets.UTF_8)
         );
 
+        try {
+            Files.createDirectories(Paths.get(storagePath));
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+
         var filePath = System.getenv(storagePath) + "/" + Arrays.toString(hashedFilename);
+
         try {
             song.transferTo(Path.of(filePath));
         } catch (IOException e) {
@@ -42,6 +51,7 @@ public class LocalSongStorageRepository implements SongStorageRepository {
                 .storageType(StorageType.LOCAL)
                 .storagePath(filePath)
                 .build();
+
 
     }
 }

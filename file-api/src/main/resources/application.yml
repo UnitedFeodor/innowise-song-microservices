@@ -8,8 +8,20 @@ spring:
       hibernate:
         show_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
-    hibernate:
-      ddl-auto: update
+        ddl-auto: update
+  cloud:
+    aws:
+      s3:
+        endpoint: http://s3.localhost.localstack.cloud:4566
+        region: eu-central-1
+      credentials:
+        access-key: none
+        secret-key: none
+      region:
+        static: eu-central-1
+
 storage:
   local:
-    path: D:\Java\Innowise Tasks\task5-microservices\storage
+    path: /storage
+  s3:
+    bucket-name: songfile
