@@ -1,7 +1,7 @@
 package com.innowise.fileapi.service;
 
 import com.innowise.contractapi.dto.SongSaveResult;
-import com.innowise.contractapi.model.SongFile;
+import com.innowise.fileapi.model.SongFile;
 import com.innowise.contractapi.model.StorageType;
 import com.innowise.fileapi.repository.SongFileRepository;
 import com.innowise.fileapi.repository.impl.LocalSongStorageRepository;

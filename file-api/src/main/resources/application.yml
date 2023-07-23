@@ -1,5 +1,13 @@
-
+server:
+  port: 0
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
 spring:
+  application:
+    name: file-api
+  servlet:
     multipart:
       max-file-size: 30MB
       max-request-size: 30MB
@@ -37,5 +45,3 @@ storage:
 logging:
   level:
     root=INFO:
-server:
-  port: 8081

@@ -1,7 +1,7 @@
 package com.innowise.fileapi.repository;
 
 import com.innowise.contractapi.dto.SongSaveResult;
-import com.innowise.contractapi.model.SongFile;
+import com.innowise.fileapi.model.SongFile;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface SongStorageRepository {

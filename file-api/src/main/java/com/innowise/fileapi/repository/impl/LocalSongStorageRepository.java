@@ -1,7 +1,7 @@
 package com.innowise.fileapi.repository.impl;
 
 import com.innowise.contractapi.dto.SongSaveResult;
-import com.innowise.contractapi.model.SongFile;
+import com.innowise.fileapi.model.SongFile;
 import com.innowise.contractapi.model.StorageType;
 import com.innowise.fileapi.repository.SongStorageRepository;
 import lombok.extern.slf4j.Slf4j;
