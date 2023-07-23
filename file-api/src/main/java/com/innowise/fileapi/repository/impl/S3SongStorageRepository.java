@@ -1,27 +1,28 @@
 package com.innowise.fileapi.repository.impl;
 
-import com.innowise.fileapi.dto.SongSaveResult;
-import com.innowise.fileapi.model.StorageType;
+import com.innowise.contractapi.dto.SongSaveResult;
+import com.innowise.contractapi.model.SongFile;
+import com.innowise.contractapi.model.StorageType;
 import com.innowise.fileapi.repository.SongStorageRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Objects;
 
 @Slf4j
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class S3SongStorageRepository implements SongStorageRepository {
 
     private final S3Client s3Client;
@@ -31,19 +32,16 @@ public class S3SongStorageRepository implements SongStorageRepository {
     public SongSaveResult save(MultipartFile song) {
 
         String songFilename = song.getOriginalFilename();
-        var hashedFilename = DigestUtils.md5Digest(
-                Objects
-                        .requireNonNull(songFilename)
-                        .getBytes(StandardCharsets.UTF_8)
-        );
+        var hashedFilename = DigestUtils.sha256Hex(songFilename);
 
         try {
             InputStream songInputStream = song.getInputStream();
             RequestBody songRequestBody = RequestBody.fromInputStream(songInputStream, songInputStream.available());
 
-            PutObjectRequest songPutObjectRequest = PutObjectRequest.builder()
+            PutObjectRequest songPutObjectRequest = PutObjectRequest
+                    .builder()
                     .bucket(s3BucketName)
-                    .key(Arrays.toString(hashedFilename))
+                    .key(hashedFilename)
                     .build();
 
             s3Client.putObject(songPutObjectRequest, songRequestBody);
@@ -53,7 +51,21 @@ public class S3SongStorageRepository implements SongStorageRepository {
 
         return SongSaveResult.builder()
                 .storageType(StorageType.S3)
-                .storagePath(Arrays.toString(hashedFilename))
+                .storagePath(hashedFilename)
+                .hashedFilename(hashedFilename)
                 .build();
+    }
+
+    @Override
+    public byte[] load(SongFile songInfo) {
+        GetObjectRequest objectRequest = GetObjectRequest
+                .builder()
+                .bucket(s3BucketName)
+                .key(songInfo.getStoragePath())
+                .build();
+
+        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(objectRequest);
+        return objectBytes.asByteArray();
+
     }
 }

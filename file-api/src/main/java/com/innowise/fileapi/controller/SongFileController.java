@@ -1,5 +1,6 @@
 package com.innowise.fileapi.controller;
 
+import com.innowise.contractapi.dto.SongSaveResult;
 import com.innowise.fileapi.service.SongFileService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,26 @@ public class SongFileController {
 
     private final SongFileService songFileService;
 
-    @PostMapping("/${username}")
-    public ResponseEntity<String> uploadFile(
+    @PostMapping("/{username}")
+    public ResponseEntity<SongSaveResult> uploadFile(
             @PathVariable("username") String username,
             @RequestParam("file") MultipartFile file) {
-        String storageType = songFileService.uploadFile(username, file);
-        return new ResponseEntity<>(storageType, HttpStatus.OK);
+        SongSaveResult songSaveResult = songFileService.uploadFile(username, file);
+        return new ResponseEntity<>(songSaveResult, HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}/{hashedFilename}")
+    public ResponseEntity<byte[]> downloadFile(
+            @PathVariable("username") String username,
+            @PathVariable("hashedFilename") String hashedFilename) {
+        byte[] songFile = songFileService.downloadFile(username, hashedFilename);
+        return new ResponseEntity<>(songFile, HttpStatus.OK);
+    }
+
+    @GetMapping("/{songId}")
+    public ResponseEntity<byte[]> downloadFile(
+            @PathVariable("songId") Integer songId) {
+        byte[] songFile = songFileService.downloadFile(songId);
+        return new ResponseEntity<>(songFile, HttpStatus.OK);
     }
 }

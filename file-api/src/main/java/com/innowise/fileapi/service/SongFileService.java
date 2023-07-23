@@ -1,40 +1,77 @@
 package com.innowise.fileapi.service;
 
-import com.innowise.fileapi.model.SongFile;
-import com.innowise.fileapi.model.StorageType;
+import com.innowise.contractapi.dto.SongSaveResult;
+import com.innowise.contractapi.model.SongFile;
+import com.innowise.contractapi.model.StorageType;
 import com.innowise.fileapi.repository.SongFileRepository;
 import com.innowise.fileapi.repository.impl.LocalSongStorageRepository;
 import com.innowise.fileapi.repository.impl.S3SongStorageRepository;
-import lombok.AllArgsConstructor;
+import io.awspring.cloud.sqs.operations.SqsTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Slf4j
 public class SongFileService {
 
-    SongFileRepository songFileRepo;
-    S3SongStorageRepository s3SongStorageRepository;
-    LocalSongStorageRepository localSongStorageRepository;
+    private final SongFileRepository songFileRepo;
+    private final S3SongStorageRepository s3SongStorageRepository;
+    private final LocalSongStorageRepository localSongStorageRepository;
 
-    public String uploadFile(String username, MultipartFile file) {
+    private final SqsTemplate sqsTemplate;
+    @Value("${spring.cloud.cloud.sqs.queue-url}")
+    String queueUrl;
+    public SongSaveResult uploadFile(String username, MultipartFile file) {
 
-        var storageType = StorageType.S3;
+        SongSaveResult songSaveResult;
         try {
-            s3SongStorageRepository.save(file); //TODO add retry
+            songSaveResult = s3SongStorageRepository.save(file); //TODO add retry
         } catch (Exception e) {
-            localSongStorageRepository.save(file);
-            storageType = StorageType.LOCAL;
+            songSaveResult = localSongStorageRepository.save(file);
         }
 
-        String fileName = file.getOriginalFilename();
+        String originalFilename = file.getOriginalFilename();
         SongFile songFile = SongFile.builder()
-                .fileName(fileName)
+                .originalFilename(originalFilename)
+                .hashedFilename(songSaveResult.getHashedFilename())
                 .username(username)
-                .storagePath(fileName)
-                .storageType(storageType)
+                .storagePath(songSaveResult.getStoragePath())
+                .storageType(songSaveResult.getStorageType())
                 .build();
-        songFileRepo.save(songFile);
-        return storageType.toString();
+        SongFile savedFile = songFileRepo.save(songFile);
+        songSaveResult.setFileApiId(savedFile.getId());
+
+        sqsTemplate.send(queueUrl,songSaveResult);
+        return songSaveResult;
+    }
+
+    public byte[] downloadFile(String username, String hashedFilename) {
+        SongFile songFile = songFileRepo.findFirstByUsernameAndHashedFilename(username, hashedFilename);
+        return loadSongFromStorage(songFile);
+
+    }
+
+    private byte[] loadSongFromStorage(SongFile songFile) {
+        StorageType storageType = songFile.getStorageType();
+        switch (storageType) {
+            case S3 -> {
+                return s3SongStorageRepository.load(songFile);
+            }
+            case LOCAL -> {
+                return localSongStorageRepository.load(songFile);
+            }
+            default -> {
+                throw new IllegalArgumentException("Incorrect storage type");
+            }
+        }
+    }
+
+    public byte[] downloadFile(Integer songId) {
+        SongFile songFile = songFileRepo.findById(songId).orElseThrow(() -> new IllegalArgumentException("Incorrect song id"));
+        return loadSongFromStorage(songFile);
     }
 }
