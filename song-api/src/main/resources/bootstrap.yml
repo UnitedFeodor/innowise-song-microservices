@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: song-api
+  config:
+    import: configserver:${CONFIG_SERVICE:http://localhost:8888}
+

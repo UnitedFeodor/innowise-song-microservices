@@ -1,15 +1,56 @@
 version: '3.8'
 services:
-  file:
+  config-service:
+    container_name: config-service
+    build: ./config-service
+    image: config-service:latest
+    restart: always
+    ports:
+      - '8888:8888'
+  enricher-api:
+    container_name: enricher-api
+    build: ./enricher-api
+    image: enricher-api:latest
+    restart: always
+    environment:
+      - CONFIG_SERVICE
+    depends_on:
+      - config-service
+  eureka-discovery-service:
+    container_name: eureka-discovery-service
+    build: ./eureka-discovery-service
+    image: eureka-discovery-service:latest
+    restart: always
+    ports:
+      - '8761:8761'
+    environment:
+      - CONFIG_SERVICE
+    depends_on:
+      - config-service
+  file-api:
     build: ./file-api
+    restart: always
+    environment:
+      - CONFIG_SERVICE
     depends_on:
       - mysql
+      - config-service
+  song-api:
+    build: ./song-api
+    image: song-api:latest
+    restart: always
+    environment:
+      - CONFIG_SERVICE
+    depends_on:
+      - config-service
+
   mysql:
     image: mysql:8.0
+    restart: always
     ports:
       - '3306:3306'
     environment:
-      - MYSQL_ROOT_PASSWORD=BebraBebra
+      - MYSQL_ROOT_PASSWORD=
       - MYSQL_DATABASE=innowise-microservices-file-api
     volumes:
       - /var/lib/mysql
