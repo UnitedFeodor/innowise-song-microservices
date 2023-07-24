@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: file-api
+  config:
+    import: optional:configserver:${CONFIG_SERVICE:http://localhost:8888}
