@@ -32,7 +32,7 @@ spring:
       region:
         static: eu-central-1
       sqs:
-        #        endpoint: http://localhost:4566
+        endpoint: http://localhost:4566
         queue-url: http://localhost:4566/000000000000/songfile-queue
 
 storage:

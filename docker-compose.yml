@@ -65,13 +65,14 @@ services:
     restart: always
     ports:
       - '4563-4599:4563-4599'
-      - '8055:8055'
     environment:
       - SERVICES=s3,sqs
       - DEBUG=1
-#      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_DEFAULT_REGION=eu-central-1
       - DATA_DIR=/tmp/localstack/data
+      - AWS_SECRET_ACCESS_KEY=2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
+      - AWS_ACCESS_KEY=ANUJDEKAVADIYAEXAMPLE
     volumes:
-      - '${TMPDIR:-/tmp/localstack}:/tmp/localstack'
+      - ./localstack-init-script:/etc/localstack/init/ready.d
       - '/var/run/docker.sock:/var/run/docker.sock'
