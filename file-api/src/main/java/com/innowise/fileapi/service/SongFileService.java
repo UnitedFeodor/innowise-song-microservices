@@ -1,5 +1,7 @@
 package com.innowise.fileapi.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.fileapi.dto.SongSaveResult;
 import com.innowise.fileapi.model.SongFile;
 import com.innowise.fileapi.model.StorageType;
@@ -23,6 +25,8 @@ public class SongFileService {
     private final LocalSongStorageRepository localSongStorageRepository;
 
     private final SqsTemplate sqsTemplate;
+
+    private final ObjectMapper objectMapper;
     @Value("${spring.cloud.aws.sqs.queue-url}")
     String queueUrl;
     public SongSaveResult uploadFile(String username, MultipartFile file) {
@@ -43,9 +47,16 @@ public class SongFileService {
                 .storageType(songSaveResult.getStorageType())
                 .build();
         SongFile savedFile = songFileRepo.save(songFile);
+
         songSaveResult.setFileApiId(savedFile.getId());
 
-        sqsTemplate.send(queueUrl,songSaveResult);
+        String songSaveResultMessage = null;
+        try {
+            songSaveResultMessage = objectMapper.writeValueAsString(songSaveResult);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage(), e);
+        }
+        sqsTemplate.send(queueUrl,songSaveResultMessage);
         return songSaveResult;
     }
 
