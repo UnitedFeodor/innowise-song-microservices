@@ -7,24 +7,20 @@
     <groupId>com.innowise</groupId>
     <artifactId>innowise-song-microservices</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
-    </parent>
+    <modules>
+        <module>song-api</module>
+        <module>file-api</module>
+        <module>enricher-api</module>
+        <module>config-service</module>
+        <module>eureka-discovery-service</module>
+        <module>api-gateway</module>
+    </modules>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
     <properties>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.target>19</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
