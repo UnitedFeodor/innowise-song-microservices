@@ -16,6 +16,8 @@ services:
       - CONFIG_SERVICE
     depends_on:
       - config-service
+      - eureka-discovery-service
+      - localstack
   eureka-discovery-service:
     container_name: eureka-discovery-service
     build: ./eureka-discovery-service
@@ -35,6 +37,8 @@ services:
     depends_on:
       - mysql
       - config-service
+      - eureka-discovery-service
+      - localstack
   song-api:
     build: ./song-api
     image: song-api:latest
@@ -43,27 +47,29 @@ services:
       - CONFIG_SERVICE
     depends_on:
       - config-service
-
+      - eureka-discovery-service
+      - localstack
   mysql:
-    image: mysql:8.0
+    image: mysql:latest
     restart: always
     ports:
       - '3306:3306'
     environment:
-      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ROOT_PASSWORD=BebraBebra
       - MYSQL_DATABASE=innowise-microservices-file-api
     volumes:
       - /var/lib/mysql
 
   localstack:
-    image: localstack/localstack:latest
+    image: localstack/localstack:2.1.0
+    restart: always
     ports:
       - '4563-4599:4563-4599'
-      - '8055:8080'
+      - '8055:8055'
     environment:
       - SERVICES=s3,sqs
       - DEBUG=1
-      - DOCKER_HOST=unix:///var/run/docker.sock
+#      - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_DEFAULT_REGION=eu-central-1
       - DATA_DIR=/tmp/localstack/data
     volumes:
