@@ -1,8 +1,8 @@
 package com.innowise.fileapi.service;
 
-import com.innowise.contractapi.dto.SongSaveResult;
+import com.innowise.fileapi.dto.SongSaveResult;
 import com.innowise.fileapi.model.SongFile;
-import com.innowise.contractapi.model.StorageType;
+import com.innowise.fileapi.model.StorageType;
 import com.innowise.fileapi.repository.SongFileRepository;
 import com.innowise.fileapi.repository.impl.LocalSongStorageRepository;
 import com.innowise.fileapi.repository.impl.S3SongStorageRepository;
@@ -23,7 +23,7 @@ public class SongFileService {
     private final LocalSongStorageRepository localSongStorageRepository;
 
     private final SqsTemplate sqsTemplate;
-    @Value("${spring.cloud.cloud.sqs.queue-url}")
+    @Value("${spring.cloud.aws.sqs.queue-url}")
     String queueUrl;
     public SongSaveResult uploadFile(String username, MultipartFile file) {
 

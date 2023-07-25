@@ -1,6 +1,6 @@
 package com.innowise.fileapi.controller;
 
-import com.innowise.contractapi.dto.SongSaveResult;
+import com.innowise.fileapi.dto.SongSaveResult;
 import com.innowise.fileapi.service.SongFileService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

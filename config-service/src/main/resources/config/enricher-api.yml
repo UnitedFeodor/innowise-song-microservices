@@ -1,6 +1,15 @@
 server:
   port: 0
 
+spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: ANUJDEKAVADIYAEXAMPLE
+        secret-key: 2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
+    region:
+      static: eu-central-1
+
 eureka:
   client:
     serviceUrl:

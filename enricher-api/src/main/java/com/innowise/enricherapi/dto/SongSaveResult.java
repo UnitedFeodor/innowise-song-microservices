@@ -1,6 +1,6 @@
-package com.innowise.contractapi.dto;
+package com.innowise.enricherapi.dto;
 
-import com.innowise.contractapi.model.StorageType;
+import com.innowise.enricherapi.model.StorageType;
 import lombok.Builder;
 import lombok.Data;
 

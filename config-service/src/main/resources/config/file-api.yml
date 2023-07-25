@@ -12,7 +12,7 @@ spring:
       max-request-size: 30MB
   datasource:
     url: jdbc:mysql://localhost:3306/innowise-microservices-file-api
-    password:
+    password: BebraBebra
     username: root
   jpa:
     properties:
