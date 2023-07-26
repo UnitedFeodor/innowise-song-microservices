@@ -12,6 +12,17 @@ spring:
     sqs:
       endpoint: http://localhost:4566
       queue-url: http://localhost:4566/000000000000/songfile-queue
+  security:
+    oauth2:
+      client:
+        registration:
+          spotify:
+            authorization-grant-type: client_credentials
+            client-id: ${SPOTIFY_CLIENT_ID}
+            client-secret: ${SPOTIFY_CLIENT_SECRET}
+        provider:
+          spotify:
+            token-uri: https://accounts.spotify.com/api/token
 
 eureka:
   client:

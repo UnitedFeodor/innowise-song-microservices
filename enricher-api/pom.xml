@@ -67,26 +67,25 @@
             <artifactId>camel-spring-boot-starter</artifactId>
             <version>${camel.version}</version>
         </dependency>
-
-        <!-- Apache Camel AWS2 SQS Starter -->
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-aws2-sqs-starter</artifactId>
             <version>${camel.version}</version>
         </dependency>
-
-        <!-- Apache Camel HTTP Starter -->
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-http-starter</artifactId>
             <version>${camel.version}</version>
         </dependency>
-
-        <!-- Apache Camel Jackson Starter -->
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-jackson-starter</artifactId>
             <version>${camel.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
