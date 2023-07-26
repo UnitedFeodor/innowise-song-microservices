@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
+import software.amazon.awssdk.services.sqs.SqsClient;
 
 import java.net.URI;
 
@@ -17,8 +18,8 @@ public class SqsConfig {
     @Value("${spring.cloud.region.static}")
     private String region;
     @Bean
-    public SqsAsyncClient sqsAsyncClient() {
-        return SqsAsyncClient.builder()
+    public SqsClient sqsClient() {
+        return SqsClient.builder()
                 .endpointOverride(URI.create(sqsEndpoint))
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .region(Region.of(region))

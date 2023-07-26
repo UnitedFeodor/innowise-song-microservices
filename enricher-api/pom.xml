@@ -15,7 +15,8 @@
     <description>enricher-api</description>
     <properties>
         <java.version>17</java.version>
-        <tika.version>1.28.5</tika.version>
+        <mpa3agic.version>0.9.1</mpa3agic.version>
+        <camel.version>3.21.0</camel.version>
     </properties>
 
 
@@ -36,10 +37,11 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-parsers</artifactId>
-            <version>${tika.version}</version>
+            <groupId>com.mpatric</groupId>
+            <artifactId>mp3agic</artifactId>
+            <version>${mpa3agic.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.awspring.cloud</groupId>
             <artifactId>spring-cloud-aws-starter</artifactId>
@@ -58,6 +60,33 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-spring-boot-starter</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <!-- Apache Camel AWS2 SQS Starter -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-aws2-sqs-starter</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <!-- Apache Camel HTTP Starter -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-http-starter</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <!-- Apache Camel Jackson Starter -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-jackson-starter</artifactId>
+            <version>${camel.version}</version>
         </dependency>
     </dependencies>
     <dependencyManagement>

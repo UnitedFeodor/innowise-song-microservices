@@ -7,13 +7,15 @@ services:
     restart: always
     ports:
       - '8888:8888'
-  enricher-api:
+  enricher-api: #TODO make use of .env file
     container_name: enricher-api
     build: ./enricher-api
     image: enricher-api:latest
     restart: always
     environment:
       - CONFIG_SERVICE
+      - SPOTIFY_CLIENT_ID=498867fb3c40444da061af8033c4044b
+      - SPOTIFY_CLIENT_SECRET=f15cd44fe260488da6140620479b7090
     depends_on:
       - config-service
       - eureka-discovery-service
