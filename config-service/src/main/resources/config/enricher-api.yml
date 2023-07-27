@@ -18,8 +18,8 @@ spring:
         registration:
           spotify:
             authorization-grant-type: client_credentials
-            client-id: ${SPOTIFY_CLIENT_ID}
-            client-secret: ${SPOTIFY_CLIENT_SECRET}
+            client-id: ${SPOTIFY_CLIENT_ID:498867fb3c40444da061af8033c4044b}
+            client-secret: ${SPOTIFY_CLIENT_SECRET:f15cd44fe260488da6140620479b7090}
         provider:
           spotify:
             token-uri: https://accounts.spotify.com/api/token
