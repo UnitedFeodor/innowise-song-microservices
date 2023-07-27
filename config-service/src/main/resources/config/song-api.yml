@@ -4,7 +4,7 @@ server:
 #TODO change db url
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/innowise-microservices-file-api
+    url: jdbc:mysql://localhost:3306/innowise-microservices-song-api
     password: BebraBebra
     username: root
   jpa:
