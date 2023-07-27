@@ -1,4 +1,4 @@
-package com.innowise.enricherapi.model;
+package com.innowise.enricherapi.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 @Builder
 public class SpotifySongMetadata {
+
+    private Integer id;
 
     private String spotifyId;
     private String name;

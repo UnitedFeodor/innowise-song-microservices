@@ -1,4 +1,4 @@
-package com.innowise.enricherapi.model;
+package com.innowise.enricherapi.dto;
 
 import lombok.Builder;
 import lombok.Data;
