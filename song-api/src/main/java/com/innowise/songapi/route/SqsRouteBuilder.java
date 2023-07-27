@@ -1,6 +1,5 @@
 package com.innowise.songapi.route;
 
-import com.innowise.songapi.dto.SpotifySongMetadataDto;
 import com.innowise.songapi.model.SongMetadata;
 import com.innowise.songapi.service.SongMetadataService;
 import lombok.RequiredArgsConstructor;

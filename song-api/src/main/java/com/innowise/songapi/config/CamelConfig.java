@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.services.sqs.SqsClient;
 
-import java.io.InputStream;
 
 @Configuration
 public class CamelConfig {
@@ -26,7 +25,7 @@ public class CamelConfig {
         camelContext.getGlobalOptions().put("CamelJacksonEnableTypeConverter", "true");
 
         Sqs2Component sqs2Component = new Sqs2Component();
-        camelContext.addComponent("aws2-sqs", sqs2Component);
+        sqs2Component.setCamelContext(camelContext);
         sqs2Component.start();
 
         camelContext.addRoutes(sqsRouteBuilder);
