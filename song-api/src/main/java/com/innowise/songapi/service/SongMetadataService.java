@@ -9,6 +9,7 @@ import com.innowise.songapi.repository.SongMetadataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class SongMetadataService {
     private final AlbumRepository albumRepo;
     private final ArtistRepository artistRepo;
 
+    @Transactional
     public void save(SongMetadata songMetadata) {
         saveAlbumWithoutDuplicates(songMetadata.getAlbum());
         saveArtistsWithoutDuplicates(songMetadata.getArtists());
@@ -50,6 +52,7 @@ public class SongMetadataService {
         }
     }
 
+    @Transactional
     public List<SongMetadata> getAll() {
         List<SongMetadata> songMetadataList = songMetadataRepo.findAll();
 
@@ -58,6 +61,7 @@ public class SongMetadataService {
 
     }
 
+    @Transactional
     public SongMetadata get(Integer id) {
         SongMetadata songMetadata = songMetadataRepo.findById(id).orElseThrow(
                 () -> new IllegalArgumentException(String.format("Song with id %d doesn't exist",id))
@@ -67,6 +71,7 @@ public class SongMetadataService {
         return songMetadata;
     }
 
+    @Transactional
     public void delete(Integer id, String token) {
         // TODO impl delete with circuit breaker
     }
