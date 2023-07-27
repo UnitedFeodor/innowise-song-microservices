@@ -6,6 +6,7 @@ import com.innowise.fileapi.dto.SongSaveResult;
 import com.innowise.fileapi.model.SongFile;
 import com.innowise.fileapi.model.StorageType;
 import com.innowise.fileapi.repository.SongFileRepository;
+import com.innowise.fileapi.repository.SongStorageRepository;
 import com.innowise.fileapi.repository.impl.LocalSongStorageRepository;
 import com.innowise.fileapi.repository.impl.S3SongStorageRepository;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -58,25 +61,40 @@ public class SongFileService {
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
         }
-        sqsTemplate.send(queueUrl,songSaveResultMessage);
+
+        sqsTemplate.send(queueUrl, Objects.requireNonNull(songSaveResultMessage));
+        log.info("Sent songSaveResult to sqs as json {}",songSaveResult);
+
         return songSaveResult;
     }
 
     @Transactional
     public byte[] downloadFile(String username, String hashedFilename) {
-        SongFile songFile = songFileRepo.findFirstByUsernameAndHashedFilename(username, hashedFilename);
+        SongFile songFile = songFileRepo.findFirstByUsernameAndHashedFilename(username, hashedFilename)
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect song hashed filename"));
         return loadSongFromStorage(songFile);
+    }
 
+    @Transactional
+    public byte[] downloadFile(Integer songId) {
+        SongFile songFile = songFileRepo.findById(songId).orElseThrow(() -> new IllegalArgumentException("Incorrect song id"));
+        return loadSongFromStorage(songFile);
     }
 
     private byte[] loadSongFromStorage(SongFile songFile) {
         StorageType storageType = songFile.getStorageType();
+
+        SongStorageRepository songStorageRepo = getSongStorageRepoByType(storageType);
+        return songStorageRepo.load(songFile);
+    }
+
+    private SongStorageRepository getSongStorageRepoByType(StorageType storageType) {
         switch (storageType) {
             case S3 -> {
-                return s3SongStorageRepository.load(songFile);
+                return s3SongStorageRepository;
             }
             case LOCAL -> {
-                return localSongStorageRepository.load(songFile);
+                return localSongStorageRepository;
             }
             default -> {
                 throw new IllegalArgumentException("Incorrect storage type");
@@ -84,9 +102,12 @@ public class SongFileService {
         }
     }
 
-    @Transactional
-    public byte[] downloadFile(Integer songId) {
+    public void deleteFile(Integer songId) {
         SongFile songFile = songFileRepo.findById(songId).orElseThrow(() -> new IllegalArgumentException("Incorrect song id"));
-        return loadSongFromStorage(songFile);
+        SongStorageRepository songStorageRepo = getSongStorageRepoByType(songFile.getStorageType());
+
+        songStorageRepo.delete(songFile);
+        songFileRepo.deleteById(songId);
+        log.info("Deleted file {}",songFile);
     }
 }

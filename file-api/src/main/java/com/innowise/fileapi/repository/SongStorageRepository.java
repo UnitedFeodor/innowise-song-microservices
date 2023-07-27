@@ -9,4 +9,5 @@ public interface SongStorageRepository {
 
     byte[] load(SongFile songInfo);
 
+    void delete(SongFile songInfo);
 }

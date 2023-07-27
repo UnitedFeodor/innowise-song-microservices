@@ -37,4 +37,10 @@ public class SongFileController {
         byte[] songFile = songFileService.downloadFile(songId);
         return new ResponseEntity<>(songFile, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{songId}")
+    public ResponseEntity<Object> deleteFile(@PathVariable("songId") Integer songId) {
+        songFileService.deleteFile(songId);
+        return ResponseEntity.ok().build();
+    }
 }

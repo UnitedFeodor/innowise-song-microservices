@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,7 +43,8 @@ public class LocalSongStorageRepository implements SongStorageRepository {
             log.error(e.getMessage(), e);
         }
 
-        log.info(filePath.toAbsolutePath().toString());
+        log.info("Saved song file to local storage with hashed name {}",hashedFilename);
+        log.info("Path to song is {}", filePath.toAbsolutePath());
         return SongSaveResult.builder()
                 .storageType(StorageType.LOCAL)
                 .storagePath(filePath.toString())
@@ -53,10 +55,24 @@ public class LocalSongStorageRepository implements SongStorageRepository {
     @Override
     public byte[] load(SongFile songFile) {
         try {
-            return Files.readAllBytes(Path.of(songFile.getStoragePath()));
+            byte[] songBytes = Files.readAllBytes(Path.of(songFile.getStoragePath()));
+            log.info("Loaded song from local storage with hashed name {}",songFile.getHashedFilename());
+            return songBytes;
+
         } catch (IOException e) {
             log.error(e.getMessage(),e);
+            throw new UncheckedIOException(e);
         }
-        return null;
+    }
+
+    @Override
+    public void delete(SongFile songFile) {
+        try {
+            Files.delete(Path.of(songFile.getStoragePath()));
+            log.info("Deleted song from local storage with hashed name {}",songFile.getHashedFilename());
+        } catch (IOException e) {
+            log.error(e.getMessage(),e);
+            throw new UncheckedIOException(e);
+        }
     }
 }
