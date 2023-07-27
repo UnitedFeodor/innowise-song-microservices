@@ -1,5 +1,20 @@
 version: '3.8'
 services:
+  api-gateway:
+    container_name: api-gateway
+    build: ./api-gateway
+    image: api-gateway:latest
+    restart: always
+    environment:
+      - CONFIG_SERVICE_URI=${CONFIG_SERVICE_URI}
+    ports:
+      - '8082:8082'
+    depends_on:
+      - config-service
+      - eureka-discovery-service
+      - song-api
+      - enricher-api
+      - file-api
   config-service:
     container_name: config-service
     build: ./config-service
@@ -7,15 +22,15 @@ services:
     restart: always
     ports:
       - '8888:8888'
-  enricher-api: #TODO make use of .env file
+  enricher-api:
     container_name: enricher-api
     build: ./enricher-api
     image: enricher-api:latest
     restart: always
     environment:
-      - CONFIG_SERVICE
-      - SPOTIFY_CLIENT_ID=498867fb3c40444da061af8033c4044b
-      - SPOTIFY_CLIENT_SECRET=f15cd44fe260488da6140620479b7090
+      - CONFIG_SERVICE_URI=${CONFIG_SERVICE_URI}
+      - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
+      - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
     depends_on:
       - config-service
       - eureka-discovery-service
@@ -28,16 +43,16 @@ services:
     ports:
       - '8761:8761'
     environment:
-      - CONFIG_SERVICE
+      - CONFIG_SERVICE_URI=${CONFIG_SERVICE_URI}
     depends_on:
       - config-service
   file-api:
     build: ./file-api
     restart: always
     environment:
-      - CONFIG_SERVICE
+      - CONFIG_SERVICE_URI=${CONFIG_SERVICE_URI}
     depends_on:
-      - mysql
+      - mysql-file-api
       - config-service
       - eureka-discovery-service
       - localstack
@@ -46,12 +61,13 @@ services:
     image: song-api:latest
     restart: always
     environment:
-      - CONFIG_SERVICE
+      - CONFIG_SERVICE_URI=${CONFIG_SERVICE_URI}
     depends_on:
       - config-service
       - eureka-discovery-service
       - localstack
-  mysql:
+      - mysql-song-api
+  mysql-file-api:
     image: mysql:latest
     restart: always
     ports:
@@ -60,8 +76,17 @@ services:
       - MYSQL_ROOT_PASSWORD=BebraBebra
       - MYSQL_DATABASE=innowise-microservices-file-api
     volumes:
-      - /var/lib/mysql
-
+      - /var/lib/mysql-file-api
+  mysql-song-api:
+    image: mysql:latest
+    restart: always
+    ports:
+      - '3307:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=BebraBebra
+      - MYSQL_DATABASE=innowise-microservices-song-api
+    volumes:
+      - /var/lib/mysql-song-api
   localstack:
     image: localstack/localstack:2.1.0
     restart: always

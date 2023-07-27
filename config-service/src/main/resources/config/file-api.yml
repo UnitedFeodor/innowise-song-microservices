@@ -1,9 +1,5 @@
 server:
   port: 0
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka
 
 spring:
   servlet:
@@ -25,16 +21,16 @@ spring:
     aws:
       s3:
         endpoint: http://s3.localhost.localstack.cloud:4566
-        region: eu-central-1
+        region: ${AWS_REGION:eu-central-1}
       credentials:
         access-key: ANUJDEKAVADIYAEXAMPLE
         secret-key: 2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
       region:
-        static: eu-central-1
+        static: ${AWS_REGION:eu-central-1}
       sqs:
-        endpoint: http://localhost:4566
+        endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
         queue-url: http://localhost:4566/000000000000/songfile-queue
-      endpoint: http://localhost:4566
+      endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
 
 storage:
   local:
@@ -45,3 +41,8 @@ storage:
 logging:
   level:
     root=INFO:
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_DISCOVERY_URI:http://localhost:8761/eureka}

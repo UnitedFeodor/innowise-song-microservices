@@ -8,9 +8,9 @@ spring:
         access-key: ANUJDEKAVADIYAEXAMPLE
         secret-key: 2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
     region:
-      static: eu-central-1
+      static: ${AWS_REGION:eu-central-1}
     sqs:
-      endpoint: http://localhost:4566
+      endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
   security:
     oauth2:
       client:
@@ -26,4 +26,4 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_DISCOVERY_URI:http://localhost:8761/eureka}
