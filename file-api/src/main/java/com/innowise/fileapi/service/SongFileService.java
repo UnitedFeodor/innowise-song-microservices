@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -29,6 +30,7 @@ public class SongFileService {
     private final ObjectMapper objectMapper;
     @Value("${spring.cloud.aws.sqs.queue-url}")
     String queueUrl;
+    @Transactional
     public SongSaveResult uploadFile(String username, MultipartFile file) {
 
         SongSaveResult songSaveResult;
@@ -60,6 +62,7 @@ public class SongFileService {
         return songSaveResult;
     }
 
+    @Transactional
     public byte[] downloadFile(String username, String hashedFilename) {
         SongFile songFile = songFileRepo.findFirstByUsernameAndHashedFilename(username, hashedFilename);
         return loadSongFromStorage(songFile);
@@ -81,6 +84,7 @@ public class SongFileService {
         }
     }
 
+    @Transactional
     public byte[] downloadFile(Integer songId) {
         SongFile songFile = songFileRepo.findById(songId).orElseThrow(() -> new IllegalArgumentException("Incorrect song id"));
         return loadSongFromStorage(songFile);
