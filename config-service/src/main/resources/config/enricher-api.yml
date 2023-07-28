@@ -4,9 +4,10 @@ server:
 spring:
   cloud:
     aws:
+      endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
       credentials:
-        access-key: ANUJDEKAVADIYAEXAMPLE
-        secret-key: 2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
+        access-key: ${AWS_ACCESS_KEY_ID:ANUJDEKAVADIYAEXAMPLE}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY}
     region:
       static: ${AWS_REGION:eu-central-1}
     sqs:

@@ -7,7 +7,7 @@ spring:
       max-file-size: 30MB
       max-request-size: 30MB
   datasource:
-    url: jdbc:mysql://localhost:3306/innowise-microservices-file-api
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/innowise-microservices-file-api
     password: BebraBebra
     username: root
   jpa:
@@ -23,8 +23,8 @@ spring:
         endpoint: http://s3.localhost.localstack.cloud:4566
         region: ${AWS_REGION:eu-central-1}
       credentials:
-        access-key: ANUJDEKAVADIYAEXAMPLE
-        secret-key: 2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
+        access-key: ${AWS_ACCESS_KEY_ID:ANUJDEKAVADIYAEXAMPLE}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY}
       region:
         static: ${AWS_REGION:eu-central-1}
       sqs:
