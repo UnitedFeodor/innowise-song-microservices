@@ -16,6 +16,7 @@ public class Resilience4jCircuitBreakerConfig {
                         CircuitBreakerConfig
                                 .from(CircuitBreakerConfig.ofDefaults())
                                 .slidingWindowSize(5)
+                                .automaticTransitionFromOpenToHalfOpenEnabled(true)
                                 .build()
                 )
                 .build());
