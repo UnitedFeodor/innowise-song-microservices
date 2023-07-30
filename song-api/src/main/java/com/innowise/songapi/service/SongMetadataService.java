@@ -9,8 +9,14 @@ import com.innowise.songapi.repository.SongMetadataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +29,9 @@ public class SongMetadataService {
     private final SongMetadataRepository songMetadataRepo;
     private final AlbumRepository albumRepo;
     private final ArtistRepository artistRepo;
+
+    private final RestTemplate restTemplate;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Value("${api-gateway.uri}")
     private String apiGatewayUri;
@@ -75,7 +84,20 @@ public class SongMetadataService {
     }
 
     @Transactional
-    public void delete(Integer id, String token) {
-        // TODO impl delete with circuit breaker
+    public void delete(Integer songId, String token) {
+        SongMetadata songMetadata = songMetadataRepo.findById(songId).orElseThrow(
+                () -> new IllegalArgumentException(String.format("Song with id %d doesn't exist",songId))
+        );
+
+        String fileApiDeleteUri = String.format("%s/files/%d", apiGatewayUri, songId);
+
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("file-api-delete");
+        circuitBreaker.run(() ->
+                restTemplate.exchange(fileApiDeleteUri, HttpMethod.DELETE, null, Object.class)
+        );
+
+        songMetadataRepo.deleteById(songMetadata.getId());
+        log.info("Deleted song metadata with id {}", songId);
+        // TODO impl and auth
     }
 }
