@@ -24,6 +24,9 @@ spring:
           spotify:
             token-uri: https://accounts.spotify.com/api/token
 
+api-gateway:
+  uri: ${API_GATEWAY_URI:http://localhost:8082}
+
 eureka:
   client:
     serviceUrl:

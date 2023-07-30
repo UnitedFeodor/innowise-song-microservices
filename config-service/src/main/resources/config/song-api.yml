@@ -24,6 +24,9 @@ spring:
     sqs:
       endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
 
+api-gateway:
+  uri: ${API_GATEWAY_URI:http://localhost:8082}
+
 eureka:
   client:
     serviceUrl:

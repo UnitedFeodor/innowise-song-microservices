@@ -23,7 +23,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SqsRouteBuilder extends RouteBuilder {
     private static final String SQS_URI = "aws2-sqs://%s?amazonSQSClient=#sqsClient&autoCreateQueue=true";
-    private static final String API_GATEWAY_URI = "http://localhost:8082";
+
+    @Value("${api-gateway.uri}")
+    private String apiGatewayUri;
     private static final String SPOTIFY_SEARCH_URI = "https://api.spotify.com/v1/search";
 
     @Value("${spring.security.oauth2.client.registration.spotify.client-secret}")
@@ -39,7 +41,7 @@ public class SqsRouteBuilder extends RouteBuilder {
                 .setProperty("fileApiId", simple("${body.fileApiId}"))
                 .setHeader(Exchange.HTTP_PATH, simple("/file-api/files/${body.fileApiId}"))
                 .setHeader(Exchange.HTTP_METHOD, constant(HttpMethods.GET))
-                .to(API_GATEWAY_URI)
+                .to(apiGatewayUri)
                 .removeHeader(Exchange.HTTP_PATH)
                 .convertBodyTo(byte[].class)
                 .bean(MetadataParserService.class,"parseMetadataFromSongFile")

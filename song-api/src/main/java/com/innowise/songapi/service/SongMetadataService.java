@@ -8,6 +8,7 @@ import com.innowise.songapi.repository.ArtistRepository;
 import com.innowise.songapi.repository.SongMetadataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,8 @@ public class SongMetadataService {
     private final AlbumRepository albumRepo;
     private final ArtistRepository artistRepo;
 
+    @Value("${api-gateway.uri}")
+    private String apiGatewayUri;
     @Transactional
     public void save(SongMetadata songMetadata) {
         saveAlbumWithoutDuplicates(songMetadata.getAlbum());
