@@ -89,7 +89,7 @@ public class SongMetadataService {
                 () -> new IllegalArgumentException(String.format("Song with id %d doesn't exist",songId))
         );
 
-        String fileApiDeleteUri = String.format("%s/files/%d", apiGatewayUri, songId);
+        String fileApiDeleteUri = String.format("%s/file-api/files/%d", apiGatewayUri, songId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, token);

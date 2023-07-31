@@ -15,6 +15,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -26,7 +27,7 @@ public class LocalSongStorageRepository implements SongStorageRepository {
     @Override
     public SongSaveResult save(MultipartFile song) {
         String songFilename = song.getOriginalFilename();
-        var hashedFilename = DigestUtils.sha256Hex(songFilename);
+        var hashedFilename = DigestUtils.sha256Hex(songFilename + UUID.randomUUID());
 
         // TODO make use of env variables
         Path storageDirectory = Paths.get(storagePath);
