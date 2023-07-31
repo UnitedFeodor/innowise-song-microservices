@@ -23,6 +23,12 @@ spring:
       static: ${AWS_REGION:eu-central-1}
     sqs:
       endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${ISSUER_URI:http://localhost:9000}/oauth2/jwks
+          issuer-uri: ${ISSUER_URI:http://localhost:9000}
 
 api-gateway:
   uri: ${API_GATEWAY_URI:http://localhost:8082}

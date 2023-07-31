@@ -9,11 +9,11 @@ import com.innowise.songapi.repository.SongMetadataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -91,13 +91,16 @@ public class SongMetadataService {
 
         String fileApiDeleteUri = String.format("%s/files/%d", apiGatewayUri, songId);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, token);
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+
         CircuitBreaker circuitBreaker = circuitBreakerFactory.create("file-api-delete");
         circuitBreaker.run(() ->
-                restTemplate.exchange(fileApiDeleteUri, HttpMethod.DELETE, null, Object.class)
+                restTemplate.exchange(fileApiDeleteUri, HttpMethod.DELETE, httpEntity, Object.class)
         );
 
         songMetadataRepo.deleteById(songMetadata.getId());
         log.info("Deleted song metadata with id {}", songId);
-        // TODO impl and auth
     }
 }

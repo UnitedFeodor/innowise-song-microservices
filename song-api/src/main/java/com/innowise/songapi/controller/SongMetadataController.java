@@ -5,7 +5,9 @@ import com.innowise.songapi.mapper.SongMetadataMapper;
 import com.innowise.songapi.model.SongMetadata;
 import com.innowise.songapi.service.SongMetadataService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +35,10 @@ public class SongMetadataController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
-        songMetadataService.delete(id, null); // TODO add auth with jwt in header @RequestHeader(HttpHeaders.AUTHORIZATION) String token
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Object> delete(@PathVariable("id") Integer id,
+                                         @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        songMetadataService.delete(id, token);
         return ResponseEntity.ok().build();
     }
 

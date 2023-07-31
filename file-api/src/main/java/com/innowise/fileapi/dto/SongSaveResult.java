@@ -11,6 +11,7 @@ public class SongSaveResult {
     private String storagePath;
 
     private Integer fileApiId;
+    private String token;
 
     private String hashedFilename;
 }
