@@ -20,6 +20,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -33,7 +34,7 @@ public class S3SongStorageRepository implements SongStorageRepository {
     public SongSaveResult save(MultipartFile song) {
 
         String songFilename = song.getOriginalFilename();
-        var hashedFilename = DigestUtils.sha256Hex(songFilename);
+        var hashedFilename = DigestUtils.sha256Hex(songFilename + UUID.randomUUID());
 
         try {
             InputStream songInputStream = song.getInputStream();
