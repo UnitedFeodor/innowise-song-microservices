@@ -8,6 +8,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class UserDataLoader implements ApplicationRunner {
@@ -18,19 +20,31 @@ public class UserDataLoader implements ApplicationRunner {
 
 
     public void run(ApplicationArguments args) {
-        userRepo.save(
-                User.builder()
-                        .username("user")
-                        .password(passwordEncoder.encode("user"))
-                        .role("USER")
-                        .build()
+        final String usernameUser = "user";
+        Optional<User> optionalUser = userRepo.findUserByUsername(usernameUser);
+
+        optionalUser.ifPresentOrElse(userValue -> {},
+                () -> {
+                    User newUser = User.builder()
+                            .username(usernameUser)
+                            .password(passwordEncoder.encode("user"))
+                            .role("USER")
+                            .build();
+                    userRepo.save(newUser);
+                }
         );
-        userRepo.save(
-                User.builder()
-                        .username("admin")
-                        .password(passwordEncoder.encode("admin"))
-                        .role("ADMIN")
-                        .build()
+
+        String usernameAdmin = "admin";
+        optionalUser = userRepo.findUserByUsername(usernameAdmin);
+        optionalUser.ifPresentOrElse(userValue -> {},
+                () -> {
+                    User newUser = User.builder()
+                            .username(usernameAdmin)
+                            .password(passwordEncoder.encode("admin"))
+                            .role("ADMIN")
+                            .build();
+                    userRepo.save(newUser);
+                }
         );
     }
 }
