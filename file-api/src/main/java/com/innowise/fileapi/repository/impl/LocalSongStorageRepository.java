@@ -29,7 +29,6 @@ public class LocalSongStorageRepository implements SongStorageRepository {
         String songFilename = song.getOriginalFilename();
         var hashedFilename = DigestUtils.sha256Hex(songFilename + UUID.randomUUID());
 
-        // TODO make use of env variables
         Path storageDirectory = Paths.get(storagePath);
         try {
             Files.createDirectories(storageDirectory);

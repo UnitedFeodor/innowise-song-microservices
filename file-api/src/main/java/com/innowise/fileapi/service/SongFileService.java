@@ -38,7 +38,7 @@ public class SongFileService {
 
         SongSaveResult songSaveResult;
         try {
-            songSaveResult = s3SongStorageRepository.save(file); //TODO add retry
+            songSaveResult = s3SongStorageRepository.save(file);
         } catch (Exception e) {
             songSaveResult = localSongStorageRepository.save(file);
         }
