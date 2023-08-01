@@ -30,6 +30,7 @@ services:
     depends_on:
       - config-service
       - mysql-auth-api
+      - eureka-discovery-service
   config-service:
     container_name: config-service
     build: ./config-service
