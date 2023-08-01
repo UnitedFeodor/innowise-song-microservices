@@ -1,0 +1,39 @@
+server:
+  port: 0
+
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/innowise-microservices-song-api
+    password: BebraBebra
+    username: root
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        ddl-auto: update
+    generate-ddl: true
+  cloud:
+    aws:
+      endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID:ANUJDEKAVADIYAEXAMPLE}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY}
+    region:
+      static: ${AWS_REGION:eu-central-1}
+    sqs:
+      endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${ISSUER_URI:http://localhost:9000}/oauth2/jwks
+          issuer-uri: ${ISSUER_URI:http://localhost:9000}
+
+api-gateway:
+  uri: ${API_GATEWAY_URI:http://localhost:8082}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_DISCOVERY_URI:http://localhost:8761/eureka}

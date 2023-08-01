@@ -1,4 +1,4 @@
-package com.innowise.fileapi;
+package com.innowise.songapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,12 +8,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableMethodSecurity
 @EnableWebSecurity
-public class FileApiApplication {
+@EnableMethodSecurity
+public class SongApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FileApiApplication.class, args);
+        SpringApplication.run(SongApiApplication.class, args);
     }
 
 }

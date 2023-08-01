@@ -1,0 +1,33 @@
+server:
+  port: 0
+
+spring:
+  cloud:
+    aws:
+      endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID:ANUJDEKAVADIYAEXAMPLE}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY}
+    region:
+      static: ${AWS_REGION:eu-central-1}
+    sqs:
+      endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
+  security:
+    oauth2:
+      client:
+        registration:
+          spotify:
+            authorization-grant-type: client_credentials
+            client-id: ${SPOTIFY_CLIENT_ID:498867fb3c40444da061af8033c4044b}
+            client-secret: ${SPOTIFY_CLIENT_SECRET:f15cd44fe260488da6140620479b7090}
+        provider:
+          spotify:
+            token-uri: https://accounts.spotify.com/api/token
+
+api-gateway:
+  uri: ${API_GATEWAY_URI:http://localhost:8082}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_DISCOVERY_URI:http://localhost:8761/eureka}

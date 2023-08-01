@@ -1,0 +1,22 @@
+server:
+  port: 8082
+
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+    globalcors:
+      corsConfigurations:
+        '[/**]':
+          allowedOrigins: "*"
+          allowedHeaders: "*"
+          allowedMethods: "*"
+          exposed-headers: "Content-Disposition"
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_DISCOVERY_URI:http://localhost:8761/eureka}
