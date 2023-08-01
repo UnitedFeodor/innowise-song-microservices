@@ -25,6 +25,7 @@ services:
       - MYSQL_HOST=mysql-auth-api
       - ISSUER_URI=${ISSUER_URI}
       - REDIRECT_URI=${REDIRECT_URI}
+      - EUREKA_DISCOVERY_URI=${EUREKA_DISCOVERY_URI}
     ports:
       - '9000:9000'
     depends_on:
