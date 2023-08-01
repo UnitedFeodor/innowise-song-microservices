@@ -1,11 +1,13 @@
 package com.innowise.enricherapi.service;
 
+import com.innowise.enricherapi.exception.ParserException;
 import com.innowise.enricherapi.model.Id3SongMetadata;
 import com.mpatric.mp3agic.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -25,7 +27,7 @@ public class MetadataParserService {
 
         } catch (IOException | UnsupportedTagException | InvalidDataException e) {
             log.error(e.getMessage(),e);
-            throw new RuntimeException("Error while parsing mp3 tags",e); // TODO add custom
+            throw new ParserException("Error while parsing mp3 tags",e);
 
         } finally {
             if (tempFile != null) {
