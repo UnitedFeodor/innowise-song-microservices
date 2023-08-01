@@ -18,6 +18,7 @@ http://localhost:9000/oauth2/token
     code=${RECEIVED_CODE}
     redirect_uri=${CONFIGURED_URL}
     client_id=song-enricher-client
+В Basic Auth - song-enricher-client:secret
 -Полученный access token прикреплять как Bearer в хэдере запросов
 
 ## Задание
