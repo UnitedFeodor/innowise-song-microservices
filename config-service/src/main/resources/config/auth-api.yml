@@ -1,0 +1,19 @@
+server:
+  port: 9000
+
+spring:
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: ${ISSUER_URI:http://localhost:9000}
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/innowise-microservices-auth-api
+    password: BebraBebra
+    username: root
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        ddl-auto: update
+    generate-ddl: true

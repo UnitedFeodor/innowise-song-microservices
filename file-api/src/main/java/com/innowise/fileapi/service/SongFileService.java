@@ -34,7 +34,7 @@ public class SongFileService {
     @Value("${spring.cloud.aws.sqs.queue-url}")
     String queueUrl;
     @Transactional
-    public SongSaveResult uploadFile(String username, MultipartFile file) {
+    public SongSaveResult uploadFile(String username, MultipartFile file, String token) {
 
         SongSaveResult songSaveResult;
         try {
@@ -54,6 +54,7 @@ public class SongFileService {
         SongFile savedFile = songFileRepo.save(songFile);
 
         songSaveResult.setFileApiId(savedFile.getId());
+        songSaveResult.setToken(token);
 
         String songSaveResultMessage = null;
         try {

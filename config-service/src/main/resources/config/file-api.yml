@@ -31,7 +31,12 @@ spring:
         endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
         queue-url: http://localhost:4566/000000000000/songfile-queue
       endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${ISSUER_URI:http://localhost:9000}/oauth2/jwks
+          issuer-uri: ${ISSUER_URI:http://localhost:9000}
 storage:
   local:
     path: /storage

@@ -9,6 +9,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http.HttpMethods;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -41,6 +42,7 @@ public class SqsRouteBuilder extends RouteBuilder {
                 .setProperty("fileApiId", simple("${body.fileApiId}"))
                 .setHeader(Exchange.HTTP_PATH, simple("/file-api/files/${body.fileApiId}"))
                 .setHeader(Exchange.HTTP_METHOD, constant(HttpMethods.GET))
+                .setHeader(HttpHeaders.AUTHORIZATION,simple("${body.token}"))
                 .circuitBreaker()
                     .resilience4jConfiguration()
                         .slidingWindowSize(5)
@@ -51,7 +53,7 @@ public class SqsRouteBuilder extends RouteBuilder {
                 .removeHeader(Exchange.HTTP_PATH)
                 .convertBodyTo(byte[].class)
                 .bean(MetadataParserService.class,"parseMetadataFromSongFile")
-                .setHeader("Authorization", () -> spotifyToken)
+                .setHeader(HttpHeaders.AUTHORIZATION, () -> spotifyToken)
                 .setHeader(Exchange.HTTP_QUERY, simple(
                         "q=remaster%2520track:${body.name}%2520artist:${body.artist}%2520album:${body.album}&type=track&limit=1"))
                 .circuitBreaker()
