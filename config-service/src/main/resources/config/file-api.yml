@@ -29,7 +29,7 @@ spring:
         static: ${AWS_REGION:eu-central-1}
       sqs:
         endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
-        queue-url: http://localhost:4566/000000000000/songfile-queue
+        queue-url: ${AWS_ENDPOINT_URI:http://localhost:4566}/000000000000/songfile-queue
       endpoint: ${AWS_ENDPOINT_URI:http://localhost:4566}
   security:
     oauth2:
@@ -39,7 +39,7 @@ spring:
           issuer-uri: ${ISSUER_URI:http://localhost:9000}
 storage:
   local:
-    path: /storage
+    path: ${LOCAL_STORAGE_PATH:/storage}
   s3:
     bucket-name: songfile
 
