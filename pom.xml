@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>auth-api</module>
         <module>song-api</module>
         <module>file-api</module>
         <module>enricher-api</module>

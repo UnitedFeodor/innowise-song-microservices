@@ -1,23 +1,24 @@
 # Song Enricher
 
 ## Сборка и запуск
--Клонировать репозиторий
--Выполнить команду **`./mvnw clean package`**
--Выполнить команду **`docker-compose up`**
+-Клонировать репозиторий  
+-Выполнить команду **`./mvnw clean package -DskipTests`**  
+-Выполнить команду **`docker-compose up`**  
 
 ## Аутентификация
 -Отправить GET запрос 
 http://localhost:9000/oauth2/authorize?response_type=code&client_id=song-enricher-client&redirect_uri=http://localhost:9000/login&scope=openid%20profile
-(вместо localhost - релевантный адрес auth api)
--Залогиниться в форме Spring Security как user или admin (пароль совпадает с юзернеймом)
+(вместо localhost - релевантный адрес auth api)  
+-Залогиниться в форме Spring Security как user или admin (пароль совпадает с юзернеймом)  
 -Полученный в строке запроса код вместе с остальными параметрами отправить POST запросом на 
 http://localhost:9000/oauth2/token 
 (вместо localhost - релевантный адрес auth api): 
-    grant_type=authorization_code
-    scope=openid profile
-    code=${RECEIVED_CODE}
-    redirect_uri=${CONFIGURED_URL}
-    client_id=song-enricher-client
+    grant_type=authorization_code  
+    scope=openid profile  
+    code=${RECEIVED_CODE}  
+    redirect_uri=${CONFIGURED_URL}  
+    client_id=song-enricher-client  
+В Basic Auth - song-enricher-client:secret  
 -Полученный access token прикреплять как Bearer в хэдере запросов
 
 ## Задание

@@ -16,6 +16,21 @@ services:
       - song-api
       - enricher-api
       - file-api
+  auth-api:
+    container_name: auth-api
+    build: ./auth-api
+    restart: always
+    environment:
+      - CONFIG_SERVICE_URI=${CONFIG_SERVICE_URI}
+      - MYSQL_HOST=mysql-auth-api
+      - ISSUER_URI=${ISSUER_URI}
+      - REDIRECT_URI=${REDIRECT_URI}
+    ports:
+      - '9000:9000'
+    depends_on:
+      - config-service
+      - mysql-auth-api
+      - eureka-discovery-service
   config-service:
     container_name: config-service
     build: ./config-service
@@ -66,11 +81,13 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - LOCAL_STORAGE_PATH
     depends_on:
       - mysql-file-api
       - config-service
       - eureka-discovery-service
       - localstack
+      - auth-api
   song-api:
     build: ./song-api
     image: song-api:latest
@@ -89,6 +106,17 @@ services:
       - eureka-discovery-service
       - localstack
       - mysql-song-api
+      - auth-api
+  mysql-auth-api:
+    image: mysql:latest
+    restart: always
+    ports:
+      - '3309:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=BebraBebra
+      - MYSQL_DATABASE=innowise-microservices-auth-api
+    volumes:
+      - /var/lib/mysql-auth-api
   mysql-file-api:
     image: mysql:latest
     restart: always
