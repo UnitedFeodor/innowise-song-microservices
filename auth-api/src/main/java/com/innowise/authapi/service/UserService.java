@@ -3,6 +3,7 @@ package com.innowise.authapi.service;
 import com.innowise.authapi.model.User;
 import com.innowise.authapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepo;
@@ -23,6 +25,7 @@ public class UserService implements UserDetailsService {
                 () -> new UsernameNotFoundException(String.format("User with username %s not found", username))
         );
 
+        log.info("Retrieved user {} from auth db",user);
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
