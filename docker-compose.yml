@@ -152,5 +152,5 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY_ID}
     volumes:
-      - ./localstack-init-script:/etc/localstack/init/ready.d
+      - './aws:/etc/localstack/init/ready.d'
       - '/var/run/docker.sock:/var/run/docker.sock'
