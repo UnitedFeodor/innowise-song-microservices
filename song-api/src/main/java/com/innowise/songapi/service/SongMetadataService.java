@@ -14,6 +14,8 @@ import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -84,15 +86,20 @@ public class SongMetadataService {
     }
 
     @Transactional
-    public void delete(Integer songId, String token) {
+    public void delete(Integer songId) {
         SongMetadata songMetadata = songMetadataRepo.findById(songId).orElseThrow(
                 () -> new IllegalArgumentException(String.format("Song with id %d doesn't exist",songId))
         );
 
+        JwtAuthenticationToken authentication =
+                (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String jwt = authentication.getToken().getTokenValue();
+        String jwtBearerHeader = String.format("Bearer %s", jwt);
+
         String fileApiDeleteUri = String.format("%s/file-api/files/%d", apiGatewayUri, songId);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, token);
+        headers.set(HttpHeaders.AUTHORIZATION, jwtBearerHeader);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
         CircuitBreaker circuitBreaker = circuitBreakerFactory.create("file-api-delete");

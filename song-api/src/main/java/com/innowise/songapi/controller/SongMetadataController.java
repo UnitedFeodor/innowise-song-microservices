@@ -36,9 +36,8 @@ public class SongMetadataController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> delete(@PathVariable("id") Integer id,
-                                         @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        songMetadataService.delete(id, token);
+    public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
+        songMetadataService.delete(id);
         return ResponseEntity.ok().build();
     }
 

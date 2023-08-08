@@ -42,7 +42,6 @@ public class SongFileService {
         } catch (Exception e) {
             songSaveResult = localSongStorageRepository.save(file);
         }
-
         String originalFilename = file.getOriginalFilename();
         SongFile songFile = SongFile.builder()
                 .originalFilename(originalFilename)
