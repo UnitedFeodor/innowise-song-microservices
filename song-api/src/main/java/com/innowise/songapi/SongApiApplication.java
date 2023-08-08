@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableDiscoveryClient
 @EnableWebSecurity
 @EnableMethodSecurity
+
 public class SongApiApplication {
 
     public static void main(String[] args) {

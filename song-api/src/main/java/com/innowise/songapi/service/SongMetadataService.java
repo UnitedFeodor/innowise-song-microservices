@@ -1,5 +1,6 @@
 package com.innowise.songapi.service;
 
+import com.innowise.songapi.client.FileApiClient;
 import com.innowise.songapi.model.Album;
 import com.innowise.songapi.model.Artist;
 import com.innowise.songapi.model.SongMetadata;
@@ -32,11 +33,9 @@ public class SongMetadataService {
     private final AlbumRepository albumRepo;
     private final ArtistRepository artistRepo;
 
-    private final RestTemplate restTemplate;
-    private final CircuitBreakerFactory circuitBreakerFactory;
+    private final FileApiClient fileApiClient;
 
-    @Value("${api-gateway.uri}")
-    private String apiGatewayUri;
+
     @Transactional
     public void save(SongMetadata songMetadata) {
         saveAlbumWithoutDuplicates(songMetadata.getAlbum());
@@ -91,23 +90,11 @@ public class SongMetadataService {
                 () -> new IllegalArgumentException(String.format("Song with id %d doesn't exist",songId))
         );
 
-        JwtAuthenticationToken authentication =
-                (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        String jwt = authentication.getToken().getTokenValue();
-        String jwtBearerHeader = String.format("Bearer %s", jwt);
-
-        String fileApiDeleteUri = String.format("%s/file-api/files/%d", apiGatewayUri, songId);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, jwtBearerHeader);
-        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
-
-        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("file-api-delete");
-        circuitBreaker.run(() ->
-                restTemplate.exchange(fileApiDeleteUri, HttpMethod.DELETE, httpEntity, Object.class)
-        );
+        fileApiClient.deleteFile(songId);
 
         songMetadataRepo.deleteById(songMetadata.getId());
         log.info("Deleted song metadata with id {}", songId);
     }
+
+    //todo wrap exceptions with response entities
 }
