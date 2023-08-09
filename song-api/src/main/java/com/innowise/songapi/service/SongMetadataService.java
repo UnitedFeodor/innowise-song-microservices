@@ -96,5 +96,4 @@ public class SongMetadataService {
         log.info("Deleted song metadata with id {}", songId);
     }
 
-    //todo wrap exceptions with response entities
 }
