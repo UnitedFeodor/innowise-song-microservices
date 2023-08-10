@@ -6,7 +6,7 @@ spring:
     oauth2:
       authorizationserver:
         issuer: ${ISSUER_URI:http://localhost:9000}
-        redirect-uri: ${REDIRECT_URI:http://localhost:9000/login}
+        redirect-uri: ${REDIRECT_URI:http://localhost:3000/login}
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/innowise-microservices-auth-api
     password: BebraBebra
