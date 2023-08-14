@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 @Slf4j
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> handleException() {
-        return getErrorMessageResponseEntity("An unknown error has occured", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorMessage> handleException() {
+//        return getErrorMessageResponseEntity("An unknown error has occured", HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorMessage> handleIllegalArgumentException() {
         return getErrorMessageResponseEntity("Illegal argument value", HttpStatus.BAD_REQUEST);

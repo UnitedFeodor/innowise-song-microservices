@@ -15,6 +15,8 @@ import {
 } from '@mui/material';
 import SpotifyLinkConverter from '../SpotifyLinkConverter/SpotifyLinkConverter';
 import { deleteSongById } from '../../service/SongService';
+import { downloadFileBySongId } from '../../service/FileService';
+import fileDownload from 'js-file-download';
 
 const SongList = ({ songMetadataList }) => {
 
@@ -25,6 +27,15 @@ const SongList = ({ songMetadataList }) => {
     } catch (error) {
       // Handle the error here
       console.error('Error deleting song:', error);
+    }
+  };
+
+  const handleDownload = async (songId, fileName) => {
+    try {
+      const fileData = await downloadFileBySongId(songId);
+      fileDownload(fileData, fileName);
+    } catch (error) {
+      console.error('Error downloading file:', error);
     }
   };
 
@@ -102,7 +113,17 @@ const SongList = ({ songMetadataList }) => {
                     <TableCell>{item.album.releaseDate}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Delete Song</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          handleDownload(item.id, item.name + '-' + item.album.name + '.mp3')
+                        }
+                      >
+                        Download
+                      </Button>
+                    </TableCell>
                     <TableCell>
                       <Button variant="contained" color="secondary" onClick={() => handleDelete(item.id)}>
                         Delete

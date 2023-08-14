@@ -97,6 +97,7 @@ public class SongFileService {
                 return localSongStorageRepository;
             }
             default -> {
+                log.error("Incorrect storage type");
                 throw new IllegalArgumentException("Incorrect storage type");
             }
         }

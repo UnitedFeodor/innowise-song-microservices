@@ -20,6 +20,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.UUID;
 
 @Slf4j
@@ -67,10 +68,16 @@ public class S3SongStorageRepository implements SongStorageRepository {
                 .key(songInfo.getStoragePath())
                 .build();
 
-        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(getObjectRequest);
-        log.info("Loaded song from s3 with hashed name {}",songInfo.getHashedFilename());
+        try {
+            ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(getObjectRequest);
+            log.info("Loaded song from s3 with hashed name {}",songInfo.getHashedFilename());
 
-        return objectBytes.asByteArray();
+            return objectBytes.asByteArray();
+        } catch (Exception e) {
+            log.error(e.getMessage(),e);
+            throw new UncheckedIOException(new IOException("Error loading from s3"));
+        }
+
 
     }
 
