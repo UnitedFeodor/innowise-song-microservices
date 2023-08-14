@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -13,8 +14,21 @@ import {
   Typography,
 } from '@mui/material';
 import SpotifyLinkConverter from '../SpotifyLinkConverter/SpotifyLinkConverter';
+import { deleteSongById } from '../../service/SongService';
 
 const SongList = ({ songMetadataList }) => {
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteSongById(id);
+      // You might want to refresh the list after deleting
+    } catch (error) {
+      // Handle the error here
+      console.error('Error deleting song:', error);
+    }
+  };
+
+
   return (
     <Box display='flex' flexDirection='column' alignItems='center' width='100%' padding={2} marginTop={2}>
       {songMetadataList.map((item) => (
@@ -36,15 +50,23 @@ const SongList = ({ songMetadataList }) => {
             <TableContainer>
               <Table>
                 <TableHead>
-                  <TableRow>
-                    <TableCell>Data Field</TableCell>
-                    <TableCell>Value</TableCell>
+                <TableRow>
+                    <TableCell>Song ID</TableCell>
+                    <TableCell>{item.id}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell>Song ID</TableCell>
-                    <TableCell>{item.id}</TableCell>
+                    <TableCell>Album Name</TableCell>
+                    <TableCell>{item.album.name}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Album Spotify URI</TableCell>
+                    <TableCell>
+                      <Typography>
+                        <SpotifyLinkConverter spotifyUri={item.album.spotifyUri} />
+                      </Typography>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Spotify ID</TableCell>
@@ -70,10 +92,7 @@ const SongList = ({ songMetadataList }) => {
                     <TableCell>Explicit</TableCell>
                     <TableCell>{item.explicit ? 'Yes' : 'No'}</TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell>Album Name</TableCell>
-                    <TableCell>{item.album.name}</TableCell>
-                  </TableRow>
+                  
                   <TableRow>
                     <TableCell>Album Spotify ID</TableCell>
                     <TableCell>{item.album.spotifyId}</TableCell>
@@ -83,11 +102,11 @@ const SongList = ({ songMetadataList }) => {
                     <TableCell>{item.album.releaseDate}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Album Spotify URI</TableCell>
+                    <TableCell>Delete Song</TableCell>
                     <TableCell>
-                      <Typography>
-                        <SpotifyLinkConverter spotifyUri={item.album.spotifyUri} />
-                      </Typography>
+                      <Button variant="contained" color="secondary" onClick={() => handleDelete(item.id)}>
+                        Delete
+                      </Button>
                     </TableCell>
                   </TableRow>
                 </TableBody>

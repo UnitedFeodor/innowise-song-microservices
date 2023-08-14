@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { environment } from '../config/environment';
+import { getLocalStorageToken } from './AuthService';
 
 const API_BASE_URL = environment.baseUrl + '/file-api' // TODO Replace all with actual access token
 
@@ -26,7 +27,7 @@ const downloadFileByUsernameAndHashedFilename = async (username, hashedFilename)
   try {
     const response = await axios.get(`${API_BASE_URL}/files/${username}/${hashedFilename}`, {
       responseType: 'arraybuffer',
-      headers: { Authorization: 'Bearer your-access-token' }, // TODO Replace with actual access token
+      headers: { Authorization: 'Bearer ' + getLocalStorageToken() },
     });
     return response.data;
   } catch (error) {
@@ -39,7 +40,7 @@ const downloadFileBySongId = async (songId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/files/${songId}`, {
       responseType: 'arraybuffer',
-      headers: { Authorization: 'Bearer your-access-token' }, // TODO Replace with actual access token
+      headers: { Authorization: 'Bearer ' + getLocalStorageToken() }, 
     });
     return response.data;
   } catch (error) {
@@ -51,7 +52,7 @@ const downloadFileBySongId = async (songId) => {
 const deleteFileById = async (songId) => {
   try {
     const response = await axios.delete(`${API_BASE_URL}/files/${songId}`, {
-      headers: { Authorization: 'Bearer your-access-token' }, // TODO Replace with actual access token
+      headers: { Authorization: 'Bearer ' + getLocalStorageToken() }, 
     });
     return response.data;
   } catch (error) {
