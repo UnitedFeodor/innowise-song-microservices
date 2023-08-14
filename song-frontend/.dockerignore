@@ -1,0 +1,11 @@
+/node_modules
+Dockerfile
+Dockerfile.prod
+build
+
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
