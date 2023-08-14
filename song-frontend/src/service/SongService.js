@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { environment } from '../config/environment';
+import { getLocalStorageToken } from './AuthService';
 
 const API_BASE_URL = environment.baseUrl + '/song-api'
 
 const getAllSongs = async () => {
   try {
     const response = await axios.get(`${API_BASE_URL}/songs`, {
-      headers: { Authorization: 'Bearer your-access-token' }, // TODO Replace with actual access token
+      headers: { Authorization: 'Bearer ' + getLocalStorageToken() },
     });
     return response.data;
   } catch (error) {
@@ -18,7 +19,7 @@ const getAllSongs = async () => {
 const getSongById = async (id) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/songs/${id}`, {
-      headers: { Authorization: 'Bearer your-access-token' }, // TODO Replace with actual access token
+      headers: { Authorization: 'Bearer ' + getLocalStorageToken() }, 
     });
     return response.data;
   } catch (error) {
@@ -30,7 +31,7 @@ const getSongById = async (id) => {
 const deleteSongById = async (id) => {
   try {
     const response = await axios.delete(`${API_BASE_URL}/songs/${id}`, {
-      headers: { Authorization: 'Bearer your-access-token' }, // TODO Replace with actual access token
+      headers: { Authorization: 'Bearer ' + getLocalStorageToken() },
     });
     return response.data;
   } catch (error) {

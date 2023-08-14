@@ -2,7 +2,9 @@ import React from 'react'
 
 function Error404() {
   return (
-    <div>Error404</div>
+    <div>
+      <h1>Unknown route, sorry!</h1>
+    </div>
   )
 }
 

@@ -9,13 +9,16 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-    globalcors:
-      corsConfigurations:
-        '[/**]':
-          allowedOrigins: "*"
-          allowedHeaders: "*"
-          allowedMethods: "*"
-          exposed-headers: "Content-Disposition"
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - AddResponseHeader=Access-Control-Allow-Origin, *
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+            exposed-headers: "Content-Disposition"
 eureka:
   client:
     serviceUrl:

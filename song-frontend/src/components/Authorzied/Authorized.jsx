@@ -1,25 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react'
+import { getToken } from '../../service/AuthService';
 import { useNavigate } from 'react-router-dom';
-import { getAuthCode,getToken } from '../../service/AuthService';
 
-const Login = () => {
+export default function Authorized() {
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    try {
-      const authCode = await getAuthCode();
-      if (authCode) {
-        console.log('Got auth code');
-        await handleAuthorizationCallback()
-      } else {
-        console.error('Error obtaining auth code');
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
-  };
-
-  // This function will be called when the user is redirected back to your app after authorization
+  // This function will be called when the user is redirected back to app after authorization
   const handleAuthorizationCallback = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const authCode = urlParams.get('code');
@@ -31,7 +17,7 @@ const Login = () => {
         console.log(`tokenResponse ${tokenResponse}`)
         if (tokenResponse.access_token) {
           localStorage.setItem('access_token', tokenResponse.access_token);
-          navigate('/home'); // Redirect to your dashboard or other protected route
+          navigate('/home'); // Redirect to dashboard or other protected route
         } else {
           console.error('Error obtaining access token');
         }
@@ -44,15 +30,10 @@ const Login = () => {
   };
 
   // Call the callback function when the component mounts
-  React.useEffect(() => {
+  useEffect(() => {
     handleAuthorizationCallback();
   }, []);
-
   return (
-    <div>
-      <button onClick={handleLogin}>Login</button>
-    </div>
-  );
-};
-
-export default Login;
+    <div>Authorized</div>
+  )
+}

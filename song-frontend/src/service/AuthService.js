@@ -44,4 +44,8 @@ const getToken = async (code) => {
     }
 };
 
-export { getAuthCode, getToken };
+const getLocalStorageToken = () => {
+  return localStorage.getItem('access_token')
+}
+
+export { getAuthCode, getToken, getLocalStorageToken};
