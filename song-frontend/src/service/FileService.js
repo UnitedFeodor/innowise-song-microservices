@@ -5,7 +5,7 @@ import { getLocalStorageToken } from './AuthService';
 const API_BASE_URL = environment.baseUrl + '/file-api' // TODO Replace all with actual access token
 
 
-const uploadFile = async (username, file, token) => {
+const uploadFile = async (username, file) => {
   const formData = new FormData();
   formData.append('file', file);
 
@@ -13,7 +13,7 @@ const uploadFile = async (username, file, token) => {
     const response = await axios.post(`${API_BASE_URL}/files/${username}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`,
+        Authorization: 'Bearer ' + getLocalStorageToken(),
       },
     });
     return response.data;

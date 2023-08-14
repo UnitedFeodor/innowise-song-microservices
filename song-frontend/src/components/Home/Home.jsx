@@ -3,6 +3,8 @@ import { getAuthCode } from '../../service/AuthService';
 import Button from '@mui/material/Button';
 import { getAllSongs } from '../../service/SongService';
 import SongList from '../SongList/SongList';
+import FileUpload from '../FileUpload/FileUpload';
+import { Link } from 'react-router-dom';
 
 function Home() {
 
@@ -37,9 +39,10 @@ function Home() {
   return (
     <div>
       
-      Home
 
       <Button variant="contained" onClick={handleLogin}>Login</Button>
+      <Link to="/upload">Upload file</Link>
+
       <h1>Song List</h1>
       {songData.length > 0 ? (
         <SongList songMetadataList={songData} />

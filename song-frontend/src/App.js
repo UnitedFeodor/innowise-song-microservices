@@ -3,8 +3,8 @@ import Error404 from './components/Error404/Error404';
 import Home from './components/Home/Home';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute'
 import {Routes, Route, BrowserRouter } from "react-router-dom"
-import Upload from './components/Upload/Upload';
 import Authorized from './components/Authorzied/Authorized';
+import FileUpload from './components/FileUpload/FileUpload';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           }/>
           <Route path="/upload" element={
             <PrivateRoute>
-              <Upload/>
+              <FileUpload/>
             </PrivateRoute>
           }/>
         </Routes>
