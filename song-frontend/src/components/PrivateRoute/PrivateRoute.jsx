@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { getLocalStorageToken } from "../../service/AuthService";
+import { getLocalStorageToken, isLoggedIn } from "../../service/AuthService";
 
   
 function PrivateRoute({ children }) {
-    const isLoggedIn = getLocalStorageToken() != null
-    console.log('isLoggedIn is ', isLoggedIn)
+    const isAuth = isLoggedIn()
+    console.log('PrivateRoute: isAuth is ', isAuth)
     let navigate = useNavigate();
     return (
       <>
         {
-            isLoggedIn ? children : navigate("/home") 
+            isAuth ? children : navigate("/home") 
         }
       </>
     );

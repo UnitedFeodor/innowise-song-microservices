@@ -1,6 +1,7 @@
 package com.innowise.authapi.config;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -30,8 +32,10 @@ public class SecurityConfig {
                         .anyRequest().permitAll())
                 .formLogin(Customizer.withDefaults())
                 .logout(customizer -> customizer
-                        .logoutSuccessHandler((request, response, authentication) ->
-                                response.setStatus(HttpServletResponse.SC_NO_CONTENT))
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            log.info("logout success handler");
+                            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                        })
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
                 .build();

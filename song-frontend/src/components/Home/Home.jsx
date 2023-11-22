@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { getAuthCode } from '../../service/AuthService';
+import { getAuthCode, getLocalStorageToken, isLoggedIn } from '../../service/AuthService';
 import Button from '@mui/material/Button';
 import { getAllSongs } from '../../service/SongService';
 import SongList from '../SongList/SongList';
-import FileUpload from '../FileUpload/FileUpload';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { environment } from '../../config/environment';
 
 function Home() {
 
@@ -36,18 +37,36 @@ function Home() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+    //   await axios.get(environment.issuerUrl + '/logout' , 
+    //     { headers: {
+    //       Authorization: 'Bearer ' + getLocalStorageToken(),
+    //     },
+    //   }); 
+    //TODO implement properly
+    localStorage.clear()
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  };
+
   return (
     <div>
       
 
-      <Button variant="contained" onClick={handleLogin}>Login</Button>
+      { !isLoggedIn() ? 
+        <Button variant="contained" onClick={handleLogin}>Login</Button> 
+        : <Button variant="outlined" onClick={handleLogout}>Logout</Button>
+      
+      }
       <Link to="/upload">Upload file</Link>
 
       <h1>Song List</h1>
       {songData.length > 0 ? (
         <SongList songMetadataList={songData} />
-      ) : (
-        <p>Loading...</p>
+      ) : ( isLoggedIn() ?
+        <p>Loading songs...</p> : <h3>You have to log in in order to view song metadata</h3>
       )}
 
     </div>

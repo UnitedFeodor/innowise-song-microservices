@@ -48,4 +48,8 @@ const getLocalStorageToken = () => {
   return localStorage.getItem('access_token')
 }
 
-export { getAuthCode, getToken, getLocalStorageToken};
+const isLoggedIn = () => {
+    return getLocalStorageToken() != null
+}
+
+export { getAuthCode, getToken, getLocalStorageToken, isLoggedIn};
